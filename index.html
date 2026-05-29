@@ -138,6 +138,11 @@
   }
   .opt .dot{flex:0 0 auto; width:19px; height:19px; border-radius:50%; border:1.5px solid var(--muted-2); transition:.18s}
 
+  /* Feedback visuel à la sélection (tap ou clic).
+     Le bouton reste affiché ~250ms avant la transition, l'utilisateur voit son choix. */
+  .opt.selected{border-color:var(--gold); background:rgba(197,165,114,.12); transform:none}
+  .opt.selected .dot{border-color:var(--gold); box-shadow:inset 0 0 0 4px var(--gold)}
+
   .back{margin-top:26px; background:none; border:none; color:var(--muted-2); cursor:pointer; font-family:inherit; font-size:13.5px; letter-spacing:.02em}
   .back:hover{color:var(--cream)}
   .back[disabled]{opacity:.3; cursor:default}
@@ -339,11 +344,16 @@ function render(){
   document.getElementById('progDim').textContent=q.dim;
   document.getElementById('progFill').style.width=`${(cur)/Q.length*100}%`;
   document.getElementById('qText').textContent=q.q;
-  const wrap=document.getElementById('opts'); wrap.innerHTML=''; wrap.classList.add('post-click');
+  const wrap=document.getElementById('opts'); wrap.style.pointerEvents=''; wrap.innerHTML=''; wrap.classList.add('post-click');
   q.opts.forEach((o,i)=>{
     const b=document.createElement('button'); b.className='opt';
     b.innerHTML=`<span class="dot"></span><span>${o[0]}</span>`;
-    b.onclick=()=>choose(o[1]); wrap.appendChild(b);
+    b.onclick=(e)=>{
+      e.currentTarget.classList.add('selected');
+      wrap.style.pointerEvents='none';
+      setTimeout(()=>choose(o[1]), 250);
+    };
+    wrap.appendChild(b);
   });
   document.getElementById('backBtn').disabled = cur===0;
   const quiz=document.getElementById('quiz'); quiz.classList.remove('stage'); void quiz.offsetWidth; quiz.classList.add('stage');
