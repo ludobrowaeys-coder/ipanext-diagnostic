@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
 <!-- Autodiagnostic Ipanext — lead magnet prototype. Single-file, no backend, no storage. -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -122,9 +125,18 @@
     padding:17px 20px; font-size:15.5px; display:flex; align-items:center; gap:15px;
     transition:border-color .18s, background .18s, transform .12s;
   }
-  .opt:hover{border-color:var(--gold); background:rgba(197,165,114,.08); transform:translateX(3px)}
+  /* :hover réservé aux dispositifs avec vraie capacité de survol (souris/trackpad).
+     Sur écran tactile pur, neutralise le sticky-hover qui s'applique au tap. */
+  @media (hover: hover) {
+    .opt:hover{border-color:var(--gold); background:rgba(197,165,114,.08); transform:translateX(3px)}
+    .opt:hover .dot{border-color:var(--gold); box-shadow:inset 0 0 0 4px var(--gold)}
+
+    /* Neutralise le hover juste après un clic, tant que la souris n'a pas bougé.
+       Évite qu'une option apparaisse "présélectionnée" sur la question suivante. */
+    .opts.post-click .opt:hover{border-color:var(--card-edge); background:rgba(255,255,255,.025); transform:none}
+    .opts.post-click .opt:hover .dot{border-color:var(--muted-2); box-shadow:none}
+  }
   .opt .dot{flex:0 0 auto; width:19px; height:19px; border-radius:50%; border:1.5px solid var(--muted-2); transition:.18s}
-  .opt:hover .dot{border-color:var(--gold); box-shadow:inset 0 0 0 4px var(--gold)}
 
   .back{margin-top:26px; background:none; border:none; color:var(--muted-2); cursor:pointer; font-family:inherit; font-size:13.5px; letter-spacing:.02em}
   .back:hover{color:var(--cream)}
@@ -159,6 +171,8 @@
   @keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
   .hidden{display:none}
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <div class="brand">
@@ -311,6 +325,11 @@ const LEVELS = [
 
 let cur=0; const answers=new Array(Q.length).fill(null);
 
+// Le hover trompeur post-clic disparait dès que la souris bouge réellement.
+document.addEventListener('mousemove', () => {
+  document.getElementById('opts')?.classList.remove('post-click');
+});
+
 function start(){ cur=0; document.getElementById('intro').classList.add('hidden');
   document.getElementById('quiz').classList.remove('hidden'); render(); }
 
@@ -320,7 +339,7 @@ function render(){
   document.getElementById('progDim').textContent=q.dim;
   document.getElementById('progFill').style.width=`${(cur)/Q.length*100}%`;
   document.getElementById('qText').textContent=q.q;
-  const wrap=document.getElementById('opts'); wrap.innerHTML='';
+  const wrap=document.getElementById('opts'); wrap.innerHTML=''; wrap.classList.add('post-click');
   q.opts.forEach((o,i)=>{
     const b=document.createElement('button'); b.className='opt';
     b.innerHTML=`<span class="dot"></span><span>${o[0]}</span>`;
@@ -380,3 +399,6 @@ function restart(){ answers.fill(null); cur=0;
   window.scrollTo({top:0,behavior:'smooth'});
 }
 </script>
+
+</body>
+</html>
