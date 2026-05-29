@@ -355,12 +355,23 @@ function render(){
     };
     wrap.appendChild(b);
   });
-  document.getElementById('backBtn').disabled = cur===0;
+  document.getElementById('backBtn').disabled = false;
+  document.getElementById('backBtn').textContent = cur === 0 ? '← Accueil' : '← Précédent';
   const quiz=document.getElementById('quiz'); quiz.classList.remove('stage'); void quiz.offsetWidth; quiz.classList.add('stage');
 }
 
 function choose(score){ answers[cur]=score; if(cur<Q.length-1){ cur++; render(); } else finish(); }
-function back(){ if(cur>0){ cur--; render(); } }
+function back(){
+  if(cur>0){ cur--; render(); }
+  else {
+    // Retour à l'écran d'accueil depuis la question 1, on remet à zéro.
+    answers.fill(null);
+    document.getElementById('quiz').classList.add('hidden');
+    document.getElementById('intro').classList.remove('hidden');
+    document.getElementById('progFill').style.width='0%';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
 
 function finish(){
   document.getElementById('quiz').classList.add('hidden');
