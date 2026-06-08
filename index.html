@@ -22,8 +22,6 @@
 <meta property="og:title" content="Vos projets stratégiques tiennent-ils en VDD ?">
 <meta property="og:description" content="Autodiagnostic gratuit. 10 questions, 3 minutes, votre score sur le pilotage de la valeur de vos projets stratégiques. Pour groupes sous LBO.">
 <meta property="og:site_name" content="Ipanext">
-<meta property="og:image" content="https://diagnostic.ipanext.com/og-diagnostic.png">
-<meta name="twitter:image" content="https://diagnostic.ipanext.com/og-diagnostic.png">
 <meta property="og:locale" content="fr_FR">
 
 <!-- Twitter Card -->
@@ -179,8 +177,21 @@
   .hidden{display:none}
 </style>
 
-<!-- Vercel Web Analytics : trafic, visites uniques, sources. Tracker servi par Vercel. -->
-<script defer src="/_vercel/insights/script.js"></script>
+<!-- Vercel Web Analytics : tracker chargé sauf si opt-out local actif.
+     Pour exclure ses propres visites : ouvrir une fois /?optout=1 sur ce navigateur.
+     Pour réactiver : /?optout=0. Le flag persiste dans le localStorage du navigateur. -->
+<script>
+  (function(){
+    const p = new URLSearchParams(location.search).get('optout');
+    if (p === '1') { localStorage.setItem('va-disable','1'); alert('Vercel Analytics désactivé sur ce navigateur. Vos visites ne seront plus comptabilisées dans les stats.'); }
+    else if (p === '0') { localStorage.removeItem('va-disable'); alert('Vercel Analytics réactivé sur ce navigateur.'); }
+    if (localStorage.getItem('va-disable') !== '1') {
+      const s = document.createElement('script');
+      s.defer = true; s.src = '/_vercel/insights/script.js';
+      document.head.appendChild(s);
+    }
+  })();
+</script>
 
 </head>
 <body>
