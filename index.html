@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<!-- Autodiagnostic Ipanext — lead magnet prototype. Single-file, no backend, no storage. -->
+<!-- Autodiagnostic Ipanext : lead magnet V2 (profils + ESG). Single-file, no backend, no storage. -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Diagnostic Ipanext — Vos projets stratégiques tiennent-ils en VDD ?</title>
-<meta name="description" content="Autodiagnostic gratuit du pilotage de la valeur de vos projets stratégiques. 10 questions, 3 minutes, votre score et vos angles morts prioritaires sur ce qui sépare un portefeuille piloté par la valeur d'un portefeuille indéfendable en VDD. Pour ETI et groupes adossés à un fonds (LBO, private equity).">
+<title>Diagnostic Ipanext · Vos projets stratégiques tiennent-ils en VDD ?</title>
+<meta name="description" content="Autodiagnostic gratuit du pilotage de la valeur de vos projets stratégiques, financière et ESG. 10 questions, 3 minutes, votre score et vos angles morts prioritaires pour savoir si la valeur créée tiendra en VDD. Pour les groupes sous LBO et leurs fonds.">
 <meta name="author" content="Ludovic Browaeys, Ipanext">
 <meta name="robots" content="index, follow">
 
@@ -20,7 +20,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://diagnostic.ipanext.com/">
 <meta property="og:title" content="Vos projets stratégiques tiennent-ils en VDD ?">
-<meta property="og:description" content="Autodiagnostic gratuit. 10 questions, 3 minutes, votre score sur le pilotage de la valeur de vos projets stratégiques. Pour ETI et groupes adossés à un fonds (LBO, private equity).">
+<meta property="og:description" content="Autodiagnostic gratuit. 10 questions, 3 minutes : la valeur de vos projets stratégiques, financière et ESG, tiendra-t-elle en VDD ? Pour les groupes sous LBO et leurs fonds.">
 <meta property="og:site_name" content="Ipanext">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:image" content="https://diagnostic.ipanext.com/og-diagnostic-v2.png">
@@ -34,7 +34,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://diagnostic.ipanext.com/og-diagnostic-v2.png">
 <meta name="twitter:title" content="Vos projets stratégiques tiennent-ils en VDD ?">
-<meta name="twitter:description" content="Autodiagnostic gratuit. 10 questions, 3 minutes, votre score sur le pilotage de la valeur de vos projets stratégiques. Pour ETI et groupes adossés à un fonds (LBO, private equity).">
+<meta name="twitter:description" content="Autodiagnostic gratuit. 10 questions, 3 minutes : la valeur de vos projets stratégiques, financière et ESG, tiendra-t-elle en VDD ? Pour les groupes sous LBO et leurs fonds.">
 
 <!-- Validation de propriété Google Search Console -->
 <meta name="google-site-verification" content="0Ea49OBfM54RQjnlTGlZZ_1QJz0Cn3UVrn4tANZcU7U" />
@@ -101,6 +101,25 @@
   .note{margin-top:26px; font-size:13px; color:var(--muted-2); display:flex; align-items:center; gap:8px}
   .note svg{flex:0 0 auto}
 
+  /* ---------- Sélecteur de profil ---------- */
+  .personas-label{margin-top:30px; font-size:14px; color:var(--cream); font-weight:600}
+  .personas{margin-top:14px; display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media (max-width:560px){ .personas{grid-template-columns:1fr} }
+  .persona{
+    text-align:left; cursor:pointer; font-family:inherit; color:var(--cream);
+    background:rgba(255,255,255,.025); border:1px solid var(--card-edge); border-radius:12px;
+    padding:18px 20px; display:flex; flex-direction:column; gap:6px;
+    transition:border-color .18s, background .18s;
+  }
+  .persona b{font-weight:600; font-size:15.5px; color:#fff; line-height:1.25}
+  .persona span{font-size:14px; color:var(--muted); line-height:1.45}
+  @media (hover: hover) {
+    .persona:hover{border-color:var(--gold); background:rgba(197,165,114,.08)}
+    .persona:hover b{color:var(--gold-bright)}
+  }
+  .persona.selected{border-color:var(--gold); background:rgba(197,165,114,.12)}
+  .persona:focus-visible, .opt:focus-visible{outline:2px solid var(--gold-bright); outline-offset:2px}
+
   /* ---------- Buttons ---------- */
   .btn{
     appearance:none; border:none; cursor:pointer; font-family:inherit;
@@ -117,7 +136,9 @@
   .cta-row{margin-top:34px; display:flex; gap:14px; flex-wrap:wrap; align-items:center}
 
   /* ---------- Progress ---------- */
-  .prog-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px}
+  .prog-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; gap:16px}
+  .prog-step{white-space:nowrap}
+  .prog-dim{text-align:right}
   .prog-step{font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); font-weight:600}
   .prog-dim{font-size:13px; color:var(--muted)}
   .prog-bar{height:4px; background:rgba(255,255,255,.08); border-radius:99px; overflow:hidden; margin-bottom:34px}
@@ -125,6 +146,7 @@
 
   .q-text{font-family:'Fraunces'; font-weight:500; font-size:clamp(21px,3.4vw,28px); line-height:1.22; color:#fff; margin-bottom:30px}
 
+  .q-hint{margin:-16px 0 26px; font-size:13.5px; color:var(--muted-2); font-style:italic}
   .opts{display:flex; flex-direction:column; gap:12px}
   .opt{
     text-align:left; cursor:pointer; font-family:inherit; color:var(--cream);
@@ -174,6 +196,7 @@
 
   .closing{margin-top:32px; padding:24px 26px; background:rgba(197,165,114,.07); border:1px solid rgba(197,165,114,.25); border-radius:14px}
   .closing p{font-size:15px; color:var(--cream)}
+  .closing p + p{margin-top:12px}
   .closing .sig{margin-top:14px; font-family:'Fraunces'; font-style:italic; color:var(--gold-bright); font-size:15px}
 
   .footer{margin-top:30px; text-align:center; font-size:12px; color:var(--muted-2); letter-spacing:.03em}
@@ -213,17 +236,16 @@
 
   <!-- INTRO -->
   <div id="intro" class="panel stage">
-    <span class="eyebrow">Pilotage de la valeur</span>
-    <h1>Vos projets stratégiques <em>tiennent-ils leurs promesses ?</em></h1>
-    <p class="lead">Dans la plupart des groupes adossés à un fonds, le cap stratégique est clair, mais la valeur produite par les projets stratégiques reste mal mesurée. Dix questions pour mesurer ce qui sépare un portefeuille piloté par la valeur au quotidien, d'un portefeuille qu'il faudra reconstituer en stress le jour de la VDD.</p>
+    <span class="eyebrow">Groupes sous LBO · Pilotage de la valeur</span>
+    <h1>Vos projets stratégiques <em>tiennent-ils en VDD ?</em></h1>
+    <p class="lead">Le fonds suit un plan de création de valeur. Le COMEX pilote une liste de projets. Entre les deux, la valeur réellement créée, financière comme ESG, est rarement mesurée. Dix questions pour savoir si elle tiendra devant un acquéreur.</p>
     <div class="meta-row">
       <div class="meta"><span class="n">10</span><span class="l">questions</span></div>
       <div class="meta"><span class="n">3 min</span><span class="l">chrono</span></div>
       <div class="meta"><span class="n">Score</span><span class="l">+ angles morts</span></div>
     </div>
-    <div class="cta-row">
-      <button class="btn btn-gold" onclick="start()">Lancer le diagnostic</button>
-    </div>
+    <div class="personas-label">Choisissez votre profil pour lancer le diagnostic</div>
+    <div class="personas" id="personas"></div>
     <div class="note">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6f82a0" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       Vos réponses restent dans votre navigateur. Rien n'est enregistré ni transmis.
@@ -238,6 +260,7 @@
     </div>
     <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
     <div class="q-text" id="qText"></div>
+    <div class="q-hint hidden" id="qHint">Répondez pour la participation de votre choix.</div>
     <div class="opts" id="opts"></div>
     <button class="back" id="backBtn" onclick="back()">← Précédent</button>
   </div>
@@ -271,7 +294,8 @@
 
     <div class="closing">
       <p id="closingText"></p>
-      <div class="sig">Ludovic Browaeys — Ipanext</div>
+      <p id="personaText"></p>
+      <div class="sig">Ludovic Browaeys · Ipanext</div>
     </div>
 
     <div class="cta-row">
@@ -280,66 +304,84 @@
     </div>
   </div>
 
-  <div class="footer">Ipanext · Confidentiel · Diagnostic indicatif, calibré sur l'expérience d'ETI et de groupes adossés à un fonds (LBO, private equity)</div>
+  <div class="footer">Ipanext · Diagnostic indicatif, calibré sur l'expérience d'ETI et de groupes adossés à un fonds (LBO, private equity)</div>
 </div>
 
 <script>
 /* ---- Questions : chaque option porte un score 3 (mature) à 0 (absent) ---- */
 const Q = [
+  { dim:"Stratégie · plan de création de valeur",
+    q:"Chaque projet stratégique est-il rattaché à un levier chiffré du plan de création de valeur ?",
+    gap:["Portefeuille déconnecté du BP","Le fonds suit un plan de création de valeur, le COMEX une liste de projets. Personne ne sait dire lesquels portent l'EBITDA promis."],
+    opts:[["Oui, projet par projet",3],["Pour les plus gros projets",2],["Le lien reste implicite",1],["Non, ce sont deux mondes",0]] },
+
+  { dim:"Portefeuille · revue et arbitrage",
+    q:"Le COMEX revoit-il tout le portefeuille à cadence fixe, promis face au réalisé, avec de vraies décisions d'arrêt ou de recadrage ?",
+    gap:["Un COMEX qui valide sans arbitrer","Vingt projets lancés, aucun arrêté. Le capex se disperse."],
+    opts:[["Oui, à chaque cycle",3],["Une revue existe, sans vrais arbitrages",2],["Du reporting projet par projet",1],["Non",0]] },
+
   { dim:"Décider · business case",
-    q:"À l'engagement d'un projet stratégique, disposez-vous d'un business case chiffré (bénéfices, payback) ?",
-    gap:["Engagement à l'aveugle","Sans business case chiffré, l'arbitrage se fait à l'instinct et les mauvais projets passent."],
-    opts:[["Systématiquement, payback à l'appui",3],["Souvent, mais inégalement",2],["Rarement, surtout les gros projets",1],["Quasiment jamais",0]] },
+    q:"Avant le GO, chaque projet a-t-il un business case chiffré et validé par la Direction Financière ?",
+    gap:["GO sans business case validé","Personne ne challenge le gain annoncé. On découvre qu'il était surestimé en exécution, ou en VDD."],
+    opts:[["Oui, pas de GO sans validation DAF",3],["Chiffré, validé selon les cas",2],["Chiffré par le porteur seul",1],["Rarement chiffré",0]] },
 
-  { dim:"Décider · hypothèses",
-    q:"Les hypothèses de ces business cases sont-elles challengées par la Direction Financière ou un tiers ?",
-    gap:["Hypothèses non challengées","Des business cases montés dans l'urgence surestiment les bénéfices, et personne ne le voit avant l'exécution."],
-    opts:[["Oui, validation conjointe avec la DAF",3],["Parfois, selon le porteur",2],["Rarement",1],["Non, on fait confiance au porteur",0]] },
-
-  { dim:"Piloter · KPI commun",
-    q:"Pouvez-vous comparer le retour attendu d'un projet à l'autre avec un indicateur commun ?",
-    gap:["Pas de langage de valeur commun","Sans KPI homogène, le COMEX arbitre sans repère et ne peut pas prioriser."],
-    opts:[["Oui, un KPI homogène pour tous",3],["Partiellement",2],["Chaque projet a sa logique",1],["Non, aucun indicateur comparable",0]] },
+  { dim:"Décider · langage financier",
+    q:"Pouvez-vous comparer deux projets avec les mêmes indicateurs : gain net annuel, payback, ROI ?",
+    gap:["Pas de langage financier commun","Le COMEX arbitre à l'instinct, le fonds ne peut pas comparer les capex entre eux."],
+    opts:[["Oui, pour tous les projets",3],["Pour une partie",2],["Chaque projet a sa logique",1],["Aucun indicateur comparable",0]] },
 
   { dim:"Piloter · valeur en exécution",
-    q:"Pendant l'exécution, suivez-vous la valeur attendue, ou seulement les délais et les coûts ?",
-    gap:["Pilotage délais/coûts seulement","On tient le planning mais on perd de vue la promesse de valeur qui justifiait le projet."],
-    opts:[["La valeur, autant que délais et coûts",3],["Surtout délais et coûts, un peu la valeur",2],["Délais et coûts uniquement",1],["Pilotage informel",0]] },
+    q:"En comité de pilotage, revoyez-vous le business case, ou seulement les délais et les budgets ?",
+    gap:["Valeur perdue en route","Le planning est tenu, la promesse ne l'est plus. Rien ne force à recadrer un projet qui ne rapportera pas."],
+    opts:[["Le business case, à chaque comité",3],["De temps en temps",2],["Délais et budgets uniquement",1],["Pilotage informel",0]] },
 
-  { dim:"Piloter · gains non financiers",
-    q:"Les projets sans ROI en euros (conformité, qualité, RSE) sont-ils pilotés avec la même rigueur ?",
-    gap:["Projets non financiers hors radar","Faute de typage, des projets conformité ou RSE majeurs échappent au pilotage."],
-    opts:[["Oui, chaque gain est typé",3],["En partie",2],["Rarement",1],["Non, on ne pilote que l'argent",0]] },
+  { dim:"Prouver · gains réels",
+    q:"Après livraison, mesurez-vous les gains réels face au business case, confirmés par la Finance ?",
+    gap:["Gains jamais prouvés","Les capex sont engagés, les gains restent déclaratifs, et les mêmes erreurs d'estimation se répètent."],
+    opts:[["Systématiquement",3],["Sur quelques projets",2],["Très rarement",1],["Jamais",0]] },
 
-  { dim:"Prouver · bilan post-livraison",
-    q:"Réalisez-vous un bilan post-livraison comparant la valeur promise à la valeur réalisée ?",
-    gap:["Aucun bilan post-livraison","Sans retour d'expérience, les mêmes erreurs d'estimation se répètent projet après projet."],
-    opts:[["Systématiquement",3],["Sur quelques projets",2],["Très rarement",1],["Jamais, par manque de temps",0]] },
+  { dim:"Prouver · impact actionnaire",
+    q:"Savez-vous dire, pour chaque gain, s'il joue sur l'EBITDA, le cash ou le risque ?",
+    gap:["Gains mal qualifiés","Du chiffre d'affaires présenté comme gain, du BFR compté en EBITDA. Le chiffre ne tiendra pas devant un acquéreur."],
+    opts:[["Oui, chaque gain est typé",3],["Pour les gains financiers seulement",2],["Tout est rangé en « économies » ou en CA",1],["Non",0]] },
 
-  { dim:"Prouver · vue COMEX",
-    q:"Le COMEX dispose-t-il d'une vue consolidée de ce que produisent les projets stratégiques ?",
-    gap:["Pas de vue COMEX consolidée","Le COMEX ne sait pas ce que produit réellement son portefeuille de projets."],
-    opts:[["Oui, un tableau de bord dédié",3],["Une vue partielle",2],["Du reporting projet par projet",1],["Non",0]] },
+  { dim:"ESG · mesure",
+    q:"Les gains ESG de vos projets sont-ils mesurés en unités physiques (tCO2e, MWh, m³), avec une méthode validée par la fonction RSE ?",
+    gap:["ESG déclaratif","Des gains annoncés sans unité ni méthode. Ils ne passeront pas la due diligence ESG d'un acquéreur."],
+    opts:[["Oui, mesurés et validés",3],["Mesurés, sans méthode commune",2],["Décrits qualitativement",1],["Non suivis",0]] },
 
-  { dim:"Socle · gouvernance",
-    q:"Existe-t-il une gouvernance projet avec une cadence régulière (gates, revues de valeur) ?",
-    gap:["Gouvernance absente ou molle","Sans cadence ni gates, rien ne force la décision d'arrêter ou de réorienter un projet."],
-    opts:[["Oui, gates et revues installés",3],["Une gouvernance légère",2],["Au cas par cas",1],["Non",0]] },
-
-  { dim:"Socle · référentiel",
-    q:"Vos chefs de projet partagent-ils des modèles communs (business case, bilan, reporting) ?",
-    gap:["Pas de référentiel partagé","Chacun son modèle : impossible de consolider ni de comparer à l'échelle du portefeuille."],
-    opts:[["Oui, modèles communs en place",3],["Quelques modèles épars",2],["Très peu",1],["Non, chacun fait à sa main",0]] },
+  { dim:"ESG · trajectoire",
+    q:"Pouvez-vous relier le reporting ESG transmis au fonds à la contribution réelle de vos projets, sans double comptage ?",
+    gap:["Trajectoire ESG hors sol","Le reporting au fonds et les projets vivent séparément. Un même levier compté deux fois, et personne ne le voit."],
+    opts:[["Oui, consolidé projet par projet",3],["En partie",2],["Le lien n'est pas fait",1],["Pas de reporting ESG structuré",0]] },
 
   { dim:"Exit · matière VDD",
-    q:"En cas de cession, disposeriez-vous d'une matière exploitable documentant la valeur générée par vos capex ?",
-    gap:["Matière VDD inexistante","À l'exit, l'actif est difficile à défendre : les capex engagés sont mal documentés sur la valeur produite."],
+    q:"Si le process de cession démarrait dans six mois, pourriez-vous documenter la valeur créée par vos capex, financière et ESG ?",
+    gap:["VDD à reconstituer dans l'urgence","Des capex sans preuve de valeur, que l'acquéreur décote. Et c'est le multiple qui paie."],
     opts:[["Oui, c'est tracé en continu",3],["Il faudrait reconstituer beaucoup",2],["Très peu de matière",1],["Rien d'exploitable",0]] },
 ];
 
+/* ---- Profils : adaptent l'accroche du résultat, pas les questions ni le score.
+        Le choix reste dans le navigateur, rien n'est transmis. ---- */
+const PERSONAS = {
+  fonds:  { label:"Partner, Operating Partner",
+            pain:"Sécuriser la valeur de vos participations jusqu'à l'exit.",
+            hint:true,
+            close:"Chaque projet non documenté est un argument laissé à l'acquéreur pour négocier le multiple. L'enjeu est d'installer la preuve dans la participation, pas de la reconstituer au moment du process." },
+  dg:     { label:"DG, membre du COMEX",
+            pain:"Arbitrer le portefeuille et tenir l'equity story jusqu'à la cession.",
+            close:"L'enjeu est de tenir devant le board une equity story chiffrée projet par projet, et d'arriver à l'exit sans avoir à la défendre dans l'urgence." },
+  daf:    { label:"DAF",
+            pain:"Des gains projets qui tiennent devant le fonds et l'acquéreur.",
+            close:"L'enjeu est que chaque gain annoncé soit qualifié, validé et traçable, pour que les chiffres qui remontent au fonds soient ceux qui passeront la VDD." },
+  transfo:{ label:"Directeur de la transformation",
+            pain:"Prouver ce que rapporte votre portefeuille, pas seulement qu'il avance.",
+            close:"Le fonds demande de la valeur, les sponsors parlent délais, et vous êtes au milieu. L'enjeu est de faire parler votre portefeuille en valeur face au COMEX comme au fonds. C'est ce qui fait passer la transformation de centre de coût à levier de valorisation." },
+};
+
 const LEVELS = [
   { min:0,  name:"Pilotage à l'instinct",
-    desc:"Les projets avancent, mais la valeur n'est ni cadrée ni mesurée. Les arbitrages se font au ressenti, et la VDD sera un événement majeur de reconstitution dans l'urgence.",
+    desc:"Les projets avancent, mais la valeur n'est ni cadrée ni mesurée. Les arbitrages se font au ressenti, et la VDD sera une reconstitution dans l'urgence, avec une décote probable.",
     close:"Votre score signale un socle à poser avant tout. La bonne nouvelle : un cadre simple, installé tôt, change radicalement la donne. C'est exactement le type de situation que je traite." },
   { min:26, name:"Cadre émergent",
     desc:"Des briques existent, mais de façon inégale et non consolidée. La valeur se mesure par endroits, sans langage commun à l'échelle du portefeuille. La VDD reste un événement à fort enjeu, à anticiper sérieusement.",
@@ -348,18 +390,34 @@ const LEVELS = [
     desc:"Le pilotage de la valeur est réel et partagé. La VDD devient un événement maîtrisé, sans surprises majeures, même s'il reste des angles morts à fermer.",
     close:"Vous êtes en avance sur la plupart des portefeuilles. Le dernier kilomètre, celui qui rend la VDD vraiment non-événementielle, mérite un regard extérieur." },
   { min:76, name:"Exit non-événementiel",
-    desc:"Votre portefeuille est piloté par la valeur au quotidien, du business case à la matière exploitable. La VDD ne fait que consolider une matière déjà documentée, projet après projet.",
+    desc:"Votre portefeuille est piloté par la valeur au quotidien, financière comme ESG, du business case à la matière exploitable. La VDD ne fait que consolider une matière déjà documentée, projet après projet.",
     close:"Rare et précieux. À ce niveau, l'échange porte moins sur l'installation que sur l'optimisation et la réplication. Heureux d'en discuter." },
 ];
 
-let cur=0; const answers=new Array(Q.length).fill(null);
+let cur=0; let persona=null; const answers=new Array(Q.length).fill(null);
+
+// Cartes profil : le clic choisit le profil ET lance la question 1 (aucun clic en plus).
+(function renderPersonas(){
+  const box=document.getElementById('personas');
+  Object.entries(PERSONAS).forEach(([key,p])=>{
+    const b=document.createElement('button'); b.className='persona'; b.type='button';
+    b.innerHTML=`<b>${p.label}</b><span>${p.pain}</span>`;
+    b.onclick=(e)=>{
+      box.querySelectorAll('.persona').forEach(x=>x.classList.remove('selected'));
+      e.currentTarget.classList.add('selected');
+      box.style.pointerEvents='none';
+      setTimeout(()=>{ box.style.pointerEvents=''; start(key); }, 250);
+    };
+    box.appendChild(b);
+  });
+})();
 
 // Le hover trompeur post-clic disparait dès que la souris bouge réellement.
 document.addEventListener('mousemove', () => {
   document.getElementById('opts')?.classList.remove('post-click');
 });
 
-function start(){ cur=0; document.getElementById('intro').classList.add('hidden');
+function start(p){ persona=p; cur=0; document.getElementById('intro').classList.add('hidden');
   document.getElementById('quiz').classList.remove('hidden'); render(); }
 
 function render(){
@@ -368,6 +426,7 @@ function render(){
   document.getElementById('progDim').textContent=q.dim;
   document.getElementById('progFill').style.width=`${(cur)/Q.length*100}%`;
   document.getElementById('qText').textContent=q.q;
+  document.getElementById('qHint').classList.toggle('hidden', !(persona && PERSONAS[persona].hint));
   const wrap=document.getElementById('opts'); wrap.style.pointerEvents=''; wrap.innerHTML=''; wrap.classList.add('post-click');
   q.opts.forEach((o,i)=>{
     const b=document.createElement('button'); b.className='opt';
@@ -389,7 +448,8 @@ function back(){
   if(cur>0){ cur--; render(); }
   else {
     // Retour à l'écran d'accueil depuis la question 1, on remet à zéro.
-    answers.fill(null);
+    answers.fill(null); persona=null;
+    document.querySelectorAll('.persona').forEach(x=>x.classList.remove('selected'));
     document.getElementById('quiz').classList.add('hidden');
     document.getElementById('intro').classList.remove('hidden');
     document.getElementById('progFill').style.width='0%';
@@ -413,6 +473,7 @@ function finish(){
   document.getElementById('levelName').textContent=lvl.name;
   document.getElementById('levelDesc').textContent=lvl.desc;
   document.getElementById('closingText').textContent=lvl.close;
+  document.getElementById('personaText').textContent = persona ? PERSONAS[persona].close : '';
 
   // angles morts : les dimensions les plus faibles (score <=1), max 3
   const ranked=Q.map((q,i)=>({q,s:answers[i]})).filter(x=>x.s<=1).sort((a,b)=>a.s-b.s).slice(0,3);
@@ -436,7 +497,8 @@ function finish(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function restart(){ answers.fill(null); cur=0;
+function restart(){ answers.fill(null); cur=0; persona=null;
+  document.querySelectorAll('.persona').forEach(x=>x.classList.remove('selected'));
   document.getElementById('result').classList.add('hidden');
   document.getElementById('intro').classList.remove('hidden');
   document.getElementById('progFill').style.width='0%';
